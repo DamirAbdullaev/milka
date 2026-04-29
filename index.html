@@ -1,172 +1,578 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Мой Счетчик</title>
-    <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --primary: #007bff;
-            --danger: #dc3545;
-            --secondary: #6c757d;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            margin: 0;
-            user-select: none;
-        }
-
-        h1 { margin-bottom: 30px; font-size: 24px; }
-
-        .counter-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 20px;
-            width: 100%;
-            max-width: 350px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--secondary);
-        }
-
-        .number {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 10px 0;
-            color: var(--primary);
-        }
-
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        button {
-            border: none;
-            border-radius: 12px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.1s;
-            touch-action: manipulation; /* Убирает задержку клика на мобилках */
-        }
-
-        button:active {
-            transform: scale(0.95);
-            opacity: 0.8;
-        }
-
-        .btn-plus {
-            background-color: var(--primary);
-            color: white;
-            flex: 2;
-            padding: 20px;
-        }
-
-        .btn-minus {
-            background-color: var(--secondary);
-            color: white;
-            flex: 1;
-            padding: 20px;
-        }
-
-        .btn-reset {
-            background-color: transparent;
-            color: var(--danger);
-            font-size: 0.9rem;
-            padding: 10px;
-            width: 100%;
-            border: 1px solid var(--danger);
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #888;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мой счётчик — план снижения</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --blue:#0b84ff;
+      --blue2:#61b7ff;
+      --red:#e23b55;
+      --green:#18b26b;
+      --orange:#ff9f1c;
+      --line:#e5e7eb;
+      --shadow:0 18px 45px rgba(31,41,55,.12);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(11,132,255,.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(255,159,28,.12), transparent 28%),
+        var(--bg);
+      color:var(--text);
+    }
+    .app{
+      width:min(980px, 100%);
+      margin:0 auto;
+      padding:20px 16px 90px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#101828,#25324a);
+      color:white;
+      border-radius:34px;
+      padding:26px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:after{
+      content:"";
+      position:absolute;
+      width:220px;height:220px;
+      border-radius:50%;
+      right:-70px;top:-70px;
+      background:rgba(255,255,255,.12);
+    }
+    h1{margin:0 0 8px;font-size:30px;line-height:1.1}
+    .hero p{margin:0;color:#d8dee9;font-size:15px}
+    .bank{
+      margin-top:18px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:22px;
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+    .bank small{display:block;color:#cbd5e1;margin-bottom:4px}
+    .bank strong{font-size:20px;letter-spacing:.5px}
+    button{
+      border:0;
+      border-radius:18px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    button:active{transform:scale(.97)}
+    .copy{
+      background:white;color:#111827;
+      padding:12px 14px;
+      white-space:nowrap;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-top:16px;
+    }
+    .stat{
+      background:var(--card);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 26px rgba(31,41,55,.08);
+    }
+    .stat span{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}
+    .stat b{font-size:24px}
+    .section{
+      margin-top:18px;
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 12px 35px rgba(31,41,55,.08);
+    }
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    h2{margin:0;font-size:21px}
+    select{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:16px;
+      background:white;
+      font-weight:700;
+    }
+    .progress-wrap{
+      margin-top:12px;
+      background:#eef2f7;
+      border-radius:999px;
+      overflow:hidden;
+      height:16px;
+    }
+    .progress{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--green),var(--blue));
+      border-radius:999px;
+      transition:.25s;
+    }
+    .limit-box{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .limit-card{
+      background:#f8fafc;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+    }
+    .limit-card strong{font-size:26px;color:var(--blue)}
+    .limit-card p{margin:6px 0 0;color:var(--muted)}
+    .products{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+    .product{
+      border:1px solid var(--line);
+      border-radius:26px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .pic{
+      height:150px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,#f3f7ff,#fff);
+      border-bottom:1px solid var(--line);
+    }
+    .pack{
+      width:86px;height:116px;
+      border-radius:10px;
+      background:linear-gradient(135deg,#fff,#dbeafe);
+      box-shadow:0 12px 24px rgba(31,41,55,.22);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding:12px 8px;
+      border:2px solid rgba(17,24,39,.08);
+      transform:rotate(-4deg);
+    }
+    .pack.red{background:linear-gradient(135deg,#fff,#ffd1dc)}
+    .pack.gold{background:linear-gradient(135deg,#fff7db,#eec46c)}
+    .brand{font-size:22px;font-weight:900;text-align:center}
+    .warn{background:#111;color:white;border-radius:7px;padding:5px;font-size:9px;text-align:center}
+    .info{padding:14px}
+    .info h3{margin:0 0 6px;font-size:18px}
+    .price{font-weight:900;color:var(--green);font-size:20px}
+    .counter{
+      display:grid;
+      grid-template-columns:54px 1fr 54px;
+      gap:10px;
+      align-items:center;
+      margin-top:12px;
+    }
+    .minus,.plus{
+      height:52px;
+      font-size:26px;
+      color:white;
+    }
+    .minus{background:#6b7280}
+    .plus{background:var(--blue)}
+    .plus:disabled{
+      background:#cbd5e1;
+      cursor:not-allowed;
+    }
+    .count{
+      text-align:center;
+      font-size:34px;
+      font-weight:900;
+      color:var(--blue);
+    }
+    .reset{
+      width:100%;
+      margin-top:10px;
+      padding:13px;
+      color:var(--red);
+      background:white;
+      border:1px solid var(--red);
+    }
+    .warning{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border-radius:18px;
+      background:#fff1f2;
+      color:#be123c;
+      font-weight:800;
+      text-align:center;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:18px;
+      font-size:14px;
+    }
+    th,td{
+      padding:13px 10px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+    }
+    th{background:#f8fafc;color:#475569}
+    .footer-bar{
+      position:fixed;
+      left:0;right:0;bottom:0;
+      background:rgba(255,255,255,.86);
+      backdrop-filter:blur(18px);
+      border-top:1px solid var(--line);
+      padding:12px 16px;
+      z-index:10;
+    }
+    .footer-inner{
+      width:min(980px,100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .danger{
+      background:var(--red);
+      color:white;
+      padding:14px;
+    }
+    .soft{
+      background:#eef6ff;
+      color:var(--blue);
+      padding:14px;
+    }
+    @media(max-width:760px){
+      .grid,.products,.limit-box{grid-template-columns:1fr}
+      .hero{padding:22px}
+      h1{font-size:26px}
+      .bank{align-items:flex-start;flex-direction:column}
+      .copy{width:100%}
+      .pic{height:130px}
+    }
+  </style>
 </head>
 <body>
-
-    <h1>Трекер привычек</h1>
-
-    <!-- Блок Сигареты -->
-    <div class="counter-card">
-        <div class="title">СИГАРЕТЫ</div>
-        <div class="number" id="cig-val">0</div>
-        <div class="controls">
-            <button class="btn-minus" onclick="change('cig', -1)">-</button>
-            <button class="btn-plus" onclick="change('cig', 1)">+</button>
+  <div class="app">
+    <div class="hero">
+      <h1>Мой счётчик снижения</h1>
+      <p>Цель — каждый месяц покупать меньше пачек и не выходить за лимит.</p>
+      <div class="bank">
+        <div>
+          <small>Карта для перевода</small>
+          <strong id="cardNumber">5614 6822 1971 4856</strong>
         </div>
-        <button class="btn-reset" onclick="resetCounter('cig')">Сбросить счетчик</button>
+        <button class="copy" onclick="copyCard()">Скопировать</button>
+      </div>
     </div>
 
-    <!-- Блок Стики -->
-    <div class="counter-card">
-        <div class="title">СТИКИ (IQOS)</div>
-        <div class="number" id="stick-val">0</div>
-        <div class="controls">
-            <button class="btn-minus" onclick="change('stick', -1)">-</button>
-            <button class="btn-plus" onclick="change('stick', 1)">+</button>
-        </div>
-        <button class="btn-reset" onclick="resetCounter('stick')">Сбросить счетчик</button>
+    <div class="grid">
+      <div class="stat"><span>Потрачено за месяц</span><b id="monthSpent">0 сум</b></div>
+      <div class="stat"><span>Потрачено всего</span><b id="totalSpent">0 сум</b></div>
+      <div class="stat"><span>Общий лимит месяца</span><b id="totalLimit">0 пачек</b></div>
     </div>
 
-    <div class="footer">Данные сохраняются автоматически</div>
+    <div class="section">
+      <div class="section-title">
+        <h2>Месяц и лимит</h2>
+        <select id="monthSelect" onchange="changeMonth()"></select>
+      </div>
 
-    <script>
-        // Инициализация данных при загрузке
-        let data = {
-            cig: parseInt(localStorage.getItem('cig')) || 0,
-            stick: parseInt(localStorage.getItem('stick')) || 0
-        };
+      <div class="limit-box">
+        <div class="limit-card">
+          <strong id="cigLimit">0</strong>
+          <p>лимит пачек сигарет на месяц</p>
+        </div>
+        <div class="limit-card">
+          <strong id="stickLimit">0</strong>
+          <p>лимит пачек стиков NEO на месяц</p>
+        </div>
+      </div>
 
-        // Обновление цифр на экране
-        function updateDisplay() {
-            document.getElementById('cig-val').innerText = data.cig;
-            document.getElementById('stick-val').innerText = data.stick;
-            
-            // Сохранение в память браузера
-            localStorage.setItem('cig', data.cig);
-            localStorage.setItem('stick', data.stick);
-        }
+      <div class="progress-wrap">
+        <div class="progress" id="progress"></div>
+      </div>
 
-        // Функция изменения (плюс/минус)
-        function change(type, amount) {
-            data[type] += amount;
-            if (data[type] < 0) data[type] = 0; // Чтобы не уходило в минус
-            updateDisplay();
-        }
+      <div class="warning" id="limitWarning">
+        Лимит на этот месяц достигнут. Покупки запрещены.
+      </div>
+    </div>
 
-        // Функция сброса
-        function resetCounter(type) {
-            if (confirm("Обнулить этот счетчик?")) {
-                data[type] = 0;
-                updateDisplay();
-            }
-        }
+    <div class="section">
+      <div class="section-title">
+        <h2>Товары и счётчики пачек</h2>
+      </div>
 
-        // Выводим данные при первом запуске
-        updateDisplay();
-    </script>
+      <div class="products">
+        <div class="product">
+          <div class="pic">
+            <div class="pack gold">
+              <div class="brand">NEO</div>
+              <div class="warn">20 стиков</div>
+            </div>
+          </div>
+          <div class="info">
+            <h3>Стики NEO</h3>
+            <div class="price">17 000 сум</div>
+            <div class="counter">
+              <button class="minus" onclick="changeCount('neo',-1)">−</button>
+              <div class="count" id="neoCount">0</div>
+              <button class="plus" id="neoPlus" onclick="changeCount('neo',1)">+</button>
+            </div>
+            <button class="reset" onclick="resetItem('neo')">Сбросить</button>
+          </div>
+        </div>
+
+        <div class="product">
+          <div class="pic">
+            <div class="pack red">
+              <div class="brand">ESSE</div>
+              <div class="warn">большие</div>
+            </div>
+          </div>
+          <div class="info">
+            <h3>ESSE Exchange большие</h3>
+            <div class="price">25 000 сум</div>
+            <div class="counter">
+              <button class="minus" onclick="changeCount('esseBig',-1)">−</button>
+              <div class="count" id="esseBigCount">0</div>
+              <button class="plus" id="esseBigPlus" onclick="changeCount('esseBig',1)">+</button>
+            </div>
+            <button class="reset" onclick="resetItem('esseBig')">Сбросить</button>
+          </div>
+        </div>
+
+        <div class="product">
+          <div class="pic">
+            <div class="pack">
+              <div class="brand">ESSE</div>
+              <div class="warn">маленькие</div>
+            </div>
+          </div>
+          <div class="info">
+            <h3>ESSE Exchange маленькие</h3>
+            <div class="price">18 000 сум</div>
+            <div class="counter">
+              <button class="minus" onclick="changeCount('esseSmall',-1)">−</button>
+              <div class="count" id="esseSmallCount">0</div>
+              <button class="plus" id="esseSmallPlus" onclick="changeCount('esseSmall',1)">+</button>
+            </div>
+            <button class="reset" onclick="resetItem('esseSmall')">Сбросить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <h2>История по месяцам</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Месяц</th>
+            <th>Сигареты</th>
+            <th>Стики</th>
+            <th>Сумма</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <div class="footer-inner">
+      <button class="soft" onclick="exportData()">Сохранить отчёт</button>
+      <button class="danger" onclick="resetMonth()">Сброс месяца</button>
+    </div>
+  </div>
+
+<script>
+const PRICES = {
+  neo: 17000,
+  esseBig: 25000,
+  esseSmall: 18000
+};
+
+const PLAN = [
+  { key:"may", name:"Май", cigLimit:8, stickLimit:15 },
+  { key:"june", name:"Июнь", cigLimit:5, stickLimit:11 },
+  { key:"july", name:"Июль", cigLimit:2, stickLimit:8 },
+  { key:"august", name:"Август", cigLimit:1, stickLimit:6 },
+  { key:"september", name:"Сентябрь", cigLimit:0, stickLimit:3 }
+];
+
+let state = JSON.parse(localStorage.getItem("smokePlanData")) || {
+  currentMonth: "may",
+  months: {}
+};
+
+PLAN.forEach(m => {
+  if(!state.months[m.key]){
+    state.months[m.key] = { neo:0, esseBig:0, esseSmall:0 };
+  }
+});
+
+function save(){
+  localStorage.setItem("smokePlanData", JSON.stringify(state));
+}
+
+function money(n){
+  return new Intl.NumberFormat("ru-RU").format(n) + " сум";
+}
+
+function getMonth(){
+  return PLAN.find(m => m.key === state.currentMonth);
+}
+
+function getData(key = state.currentMonth){
+  return state.months[key];
+}
+
+function cigUsed(data){
+  return data.esseBig + data.esseSmall;
+}
+
+function monthSum(data){
+  return data.neo * PRICES.neo + data.esseBig * PRICES.esseBig + data.esseSmall * PRICES.esseSmall;
+}
+
+function totalSum(){
+  return Object.values(state.months).reduce((sum, data) => sum + monthSum(data), 0);
+}
+
+function renderMonthSelect(){
+  const select = document.getElementById("monthSelect");
+  select.innerHTML = PLAN.map(m => `<option value="${m.key}">${m.name}</option>`).join("");
+  select.value = state.currentMonth;
+}
+
+function render(){
+  const month = getMonth();
+  const data = getData();
+
+  document.getElementById("cigLimit").textContent = month.cigLimit;
+  document.getElementById("stickLimit").textContent = month.stickLimit;
+  document.getElementById("totalLimit").textContent = (month.cigLimit + month.stickLimit) + " пачек";
+
+  document.getElementById("neoCount").textContent = data.neo;
+  document.getElementById("esseBigCount").textContent = data.esseBig;
+  document.getElementById("esseSmallCount").textContent = data.esseSmall;
+
+  const usedTotal = data.neo + cigUsed(data);
+  const limitTotal = month.cigLimit + month.stickLimit;
+  const percent = limitTotal === 0 ? 100 : Math.min(100, Math.round((usedTotal / limitTotal) * 100));
+  document.getElementById("progress").style.width = percent + "%";
+
+  document.getElementById("monthSpent").textContent = money(monthSum(data));
+  document.getElementById("totalSpent").textContent = money(totalSum());
+
+  const sticksBlocked = data.neo >= month.stickLimit;
+  const cigsBlocked = cigUsed(data) >= month.cigLimit;
+
+  document.getElementById("neoPlus").disabled = sticksBlocked;
+  document.getElementById("esseBigPlus").disabled = cigsBlocked;
+  document.getElementById("esseSmallPlus").disabled = cigsBlocked;
+
+  document.getElementById("limitWarning").style.display =
+    (sticksBlocked || cigsBlocked) ? "block" : "none";
+
+  renderHistory();
+  save();
+}
+
+function renderHistory(){
+  const tbody = document.getElementById("historyBody");
+  tbody.innerHTML = PLAN.map(m => {
+    const data = getData(m.key);
+    return `
+      <tr>
+        <td><b>${m.name}</b></td>
+        <td>${cigUsed(data)} / ${m.cigLimit}</td>
+        <td>${data.neo} / ${m.stickLimit}</td>
+        <td>${money(monthSum(data))}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function changeMonth(){
+  state.currentMonth = document.getElementById("monthSelect").value;
+  render();
+}
+
+function changeCount(item, diff){
+  const month = getMonth();
+  const data = getData();
+
+  if(diff > 0){
+    if(item === "neo" && data.neo >= month.stickLimit) return;
+    if((item === "esseBig" || item === "esseSmall") && cigUsed(data) >= month.cigLimit) return;
+  }
+
+  data[item] = Math.max(0, data[item] + diff);
+  render();
+}
+
+function resetItem(item){
+  if(confirm("Сбросить этот счётчик?")){
+    getData()[item] = 0;
+    render();
+  }
+}
+
+function resetMonth(){
+  if(confirm("Сбросить все счётчики текущего месяца?")){
+    state.months[state.currentMonth] = { neo:0, esseBig:0, esseSmall:0 };
+    render();
+  }
+}
+
+function copyCard(){
+  navigator.clipboard.writeText("5614682219714856");
+  alert("Номер карты скопирован");
+}
+
+function exportData(){
+  const lines = PLAN.map(m => {
+    const d = getData(m.key);
+    return `${m.name}: сигареты ${cigUsed(d)}/${m.cigLimit}, стики ${d.neo}/${m.stickLimit}, сумма ${money(monthSum(d))}`;
+  }).join("\n");
+
+  const text = `Отчёт по снижению курения\n\n${lines}\n\nВсего: ${money(totalSum())}`;
+  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "otchet-po-schetchiku.txt";
+  a.click();
+}
+
+renderMonthSelect();
+render();
+</script>
 </body>
 </html>
